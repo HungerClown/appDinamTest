@@ -27,7 +27,7 @@ class ComponentPainter (val activity: MainActivity,
     }
 
     private fun formatDate(date: Calendar): String {
-        val formatter = SimpleDateFormat("dd MMMM yyyy")
+        val formatter = SimpleDateFormat("dd MM yyyy")
         return formatter.format(date.time)
     }
 
@@ -36,7 +36,8 @@ class ComponentPainter (val activity: MainActivity,
         val year = c.get(Calendar.YEAR)
         val month = c.get(Calendar.MONTH)
         val day = c.get(Calendar.DAY_OF_MONTH)
-        val dpd = DatePickerDialog(activity, DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+        val dpd = DatePickerDialog(activity, DatePickerDialog.OnDateSetListener { vi, year, monthOfYear, dayOfMonth ->
+            c.set(year, monthOfYear, dayOfMonth)
             textView.setText(formatDate(c))
         }, year, month, day)
 
