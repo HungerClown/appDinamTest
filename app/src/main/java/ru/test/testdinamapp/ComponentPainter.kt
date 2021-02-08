@@ -1,16 +1,19 @@
 package ru.test.testdinamapp
 
 import android.app.DatePickerDialog
-import android.text.Layout
-import android.view.Gravity.CENTER_HORIZONTAL
+import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import java.text.SimpleDateFormat
 import java.util.*
 
+
+
 class ComponentPainter (val activity: MainActivity,
                         val rootContainer: LinearLayout,
                         val attributeList: AttributeList) {
+
+
 
     private fun createHorizontalLayout(attribute: Attribute): LinearLayout{
         val horizontalLayout = LinearLayout(activity)
@@ -21,6 +24,23 @@ class ComponentPainter (val activity: MainActivity,
         textView.width = 300
         horizontalLayout.addView(textView)
         return horizontalLayout
+    }
+
+    private fun formatDate(date: Calendar): String {
+        val formatter = SimpleDateFormat("dd MMMM yyyy")
+        return formatter.format(date.time)
+    }
+
+    private fun showDatePickerDialog(textView: TextView) {
+        val c = Calendar.getInstance()
+        val year = c.get(Calendar.YEAR)
+        val month = c.get(Calendar.MONTH)
+        val day = c.get(Calendar.DAY_OF_MONTH)
+        val dpd = DatePickerDialog(activity, DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+            textView.setText(formatDate(c))
+        }, year, month, day)
+
+        dpd.show()
     }
 //создание Boolean элемента
     private fun createBooleanEditor(horizontalLayout: LinearLayout){
@@ -44,19 +64,16 @@ class ComponentPainter (val activity: MainActivity,
 //создание элемента даты
     private fun createDateEditor(horizontalLayout: LinearLayout){
 
-        var cal = Calendar.getInstance()
         val textView = TextView(activity)
-        val dateSetListener = DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
-            cal.set(Calendar.YEAR, year)
-            cal.set(Calendar.MONTH, monthOfYear)
-            cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+        textView.setText("10.12.2021 12:23:37");
+        textView.width = 600
 
-            val myFormat = "dd.MM.yyyy" // mention the format you need
-            val sdf = SimpleDateFormat(myFormat, Locale.US)
-            textView.text = sdf.format(cal.time)
-
+        textView.setOnClickListener {
+            showDatePickerDialog(textView)
         }
+        horizontalLayout.addView(textView)
     }
+
 
 
     // Рисование атрибута
@@ -74,11 +91,7 @@ class ComponentPainter (val activity: MainActivity,
 
 
     fun drawAttributes() {
-        // Устанавливаем параметры
-        val params = LinearLayout.LayoutParams(
-            ViewGroup.LayoutParams.WRAP_CONTENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT
-        )
+
         // Перебираем атрибуты и добавляем элементы в список
         for (i in 0..attributeList.count() - 1) {
             val attribute = attributeList.get(i)
